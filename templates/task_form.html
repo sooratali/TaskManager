@@ -1,0 +1,33 @@
+<!-- templates/task_form.html -->
+{% extends "base.html" %}
+{% block content %}
+  <h2>{{ action }} Task</h2>
+  <form method="post">
+    <label>Title</label><br>
+    <input type="text" name="title" value="{{ task['title'] if task else '' }}" required><br><br>
+
+    <label>Description</label><br>
+    <textarea name="description">{{ task['description'] if task else '' }}</textarea><br><br>
+
+    <label>Due date (YYYY-MM-DD)</label><br>
+    <input type="date" name="due_date" value="{{ task['due_date'] if task else '' }}"><br><br>
+
+    <label>Priority</label><br>
+    <select name="priority">
+      <option {% if task and task['priority']=='Low' %}selected{% endif %}>Low</option>
+      <option {% if not task or task['priority']=='Normal' %}selected{% endif %}>Normal</option>
+      <option {% if task and task['priority']=='High' %}selected{% endif %}>High</option>
+    </select><br><br>
+
+    {% if task %}
+      <label>Status</label><br>
+      <select name="status">
+        <option value="incomplete" {% if task['status']=='incomplete' %}selected{% endif %}>incomplete</option>
+        <option value="complete" {% if task['status']=='complete' %}selected{% endif %}>complete</option>
+      </select><br><br>
+    {% endif %}
+
+    <button type="submit">{{ action }}</button>
+    <a href="{{ url_for('index') }}">Cancel</a>
+  </form>
+{% endblock %}

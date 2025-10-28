@@ -1,0 +1,33 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+{% block content %}
+  <h2>Your Tasks</h2>
+  {% if tasks|length == 0 %}
+    <p>No tasks yet. <a href="{{ url_for('task_new') }}">Create one</a>.</p>
+  {% else %}
+    <table class="tasks">
+      <thead>
+        <tr><th>Title</th><th>Due</th><th>Priority</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+      {% for t in tasks %}
+        <tr>
+          <td>{{ t['title'] }}</td>
+          <td>{{ t['due_date'] or '-' }}</td>
+          <td>{{ t['priority'] or 'Normal' }}</td>
+          <td>{{ t['status'] }}</td>
+          <td>
+            <a href="{{ url_for('task_edit', task_id=t['id']) }}">Edit</a>
+            <form action="{{ url_for('task_delete', task_id=t['id']) }}" method="post" style="display:inline">
+              <button type="submit" onclick="return confirm('Delete this task?')">Delete</button>
+            </form>
+            <form action="{{ url_for('task_toggle', task_id=t['id']) }}" method="post" style="display:inline">
+              <button type="submit">{{ 'Mark Incomplete' if t['status']=='complete' else 'Mark Complete' }}</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endblock %}
